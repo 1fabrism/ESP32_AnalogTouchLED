@@ -25,7 +25,7 @@ void analog_touch_LED_task(void *pvParameter)
     timer_conf.speed_mode = LEDC_HIGH_SPEED_MODE;
     timer_conf.timer_num = LEDC_TIMER_0;
     ledc_timer_config(&timer_conf);
-    
+
     //Set a LEDC channel
     ledc_channel_config_t ledc_conf;
     ledc_conf.channel = LEDC_CHANNEL_0;
@@ -35,18 +35,16 @@ void analog_touch_LED_task(void *pvParameter)
     ledc_conf.speed_mode = LEDC_HIGH_SPEED_MODE;
     ledc_conf.timer_sel = LEDC_TIMER_0;
     ledc_channel_config(&ledc_conf);
-    
+
     //Set up touch sensor
     touch_pad_init();
-    //touch_pad_io_init(TOUCH_GPIO);
     touch_pad_config(TOUCH_GPIO, 0);
     uint16_t touch_value;
     touch_pad_set_voltage(TOUCH_HVOLT_2V7, TOUCH_LVOLT_0V5, TOUCH_HVOLT_ATTEN_0V);
-    
-    
+
+
     //Where the magic happens:
     while(1) {
-        //vTaskDelay(10 / portTICK_PERIOD_MS);
 	    touch_pad_read(TOUCH_GPIO, &touch_value);
 	    if(touch_value > 1024) touch_value = 1024;
         ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, touch_value);
